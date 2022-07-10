@@ -10,10 +10,11 @@
  */
 export const getKeysByDescriptor = (object, descriptor) => {
   const descriptors = Object.getOwnPropertyDescriptors(object);
-  return Object.entries(descriptors).filter(([, value]) => {
-  return value[descriptor];
-  }).map(([key]) => key)
- 
+  return Object.entries(descriptors)
+    .filter(([, value]) => {
+      return value[descriptor];
+    })
+    .map(([key]) => key);
 };
 
 /**
@@ -22,7 +23,7 @@ export const getKeysByDescriptor = (object, descriptor) => {
  * @returns {boolean}
  */
 export const isObjectAnyFrozen = (object) => {
-  return Object.isFrozen(object) || Object.isSealed(object) || Object.isExtensible(object) 
+  return Object.isFrozen(object);
 };
 
 /**
@@ -39,19 +40,18 @@ export const assignLockedValues = (object, propertyName) => {
   const copiedObject = { ...object };
   if (propertyName in copiedObject) {
     Object.defineProperty(copiedObject, propertyName, {
-      value:copiedObject[propertyName],
-      writable: false
-    })
+      value: copiedObject[propertyName],
+      writable: false,
+    });
   } else {
     Object.defineProperty(copiedObject, propertyName, {
       value: null,
       enumerable: true,
-      configurable: true
-    })
+      configurable: true,
+    });
   }
   return copiedObject;
 };
-
 
 /**
  * Принимает объект и возвращает его копию, только абсолютно замороженную
@@ -60,7 +60,7 @@ export const assignLockedValues = (object, propertyName) => {
  * @returns {Object}
  */
 export const freezeAllInObject = (object) => {
-  const copyObject = {...object}
+  const copyObject = { ...object };
   Object.freeze(copyObject);
   return copyObject;
 };
